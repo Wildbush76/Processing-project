@@ -11,7 +11,11 @@ class Player extends SquareHitBox {
     super(x, y, xSize, ySize);
     health = 100;
     velocity = new double[2];
+    
+    //cry about the quadratic formula here
   }
+
+
 
   public void run() {
     if (keys[65] && velocity[0] > -maxMoveSpeed) {
