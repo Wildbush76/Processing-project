@@ -17,5 +17,6 @@ Player mainP;
  World theWorld;
 void draw() {
   background(World.backgroundR, World.backgroundG, World.backgroundB);
+  theWorld.drawIt();
   mainP.run();
 }

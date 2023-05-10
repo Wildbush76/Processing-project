@@ -5,14 +5,23 @@ class Player extends SquareHitBox {
   private boolean grounded = false;
   private final double maxMoveSpeed = 5;
   private final double acceration = 0.5;
-  private final double jumpHeight = 10;// use math to make this be in block heights
+  private double jumpHeight = 10;// use math to make this be in block heights
 
   public Player(int x, int y, int xSize, int ySize) {
     super(x, y, xSize, ySize);
     health = 100;
     velocity = new double[2];
-    
+
     //cry about the quadratic formula here
+    
+    
+  }
+
+  public void takeDamgeNerd(int amount) {
+    health -= amount;
+    if (health <= 0) {
+      println("you abosolute nerd");
+    }
   }
 
 
@@ -22,7 +31,7 @@ class Player extends SquareHitBox {
       velocity[0]  -= acceration;
     } else if (keys[68] && velocity[0] < maxMoveSpeed) {
       velocity[0] += acceration;
-    } else if(velocity[0] != 0) {
+    } else if (velocity[0] != 0) {
       velocity[0] += (velocity[0] < 0) ? acceration : -acceration;
     }
 
@@ -30,7 +39,7 @@ class Player extends SquareHitBox {
       velocity[1] -= jumpHeight;
     }
 
-  y += velocity[1] += World.gravity;
+    y += velocity[1] += World.gravity;
     x += velocity[0];
 
     //temp
