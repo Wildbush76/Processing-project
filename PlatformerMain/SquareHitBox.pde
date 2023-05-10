@@ -1,6 +1,5 @@
 class SquareHitBox {
-  protected int x,y;
-  protected int sizeX, sizeY;
+  protected int x,y, sizeX, sizeY;
   
   SquareHitBox(int x, int y,int sizeX, int sizeY) {
     this.x = x;
@@ -15,7 +14,7 @@ class SquareHitBox {
   
   public byte advancedHit(SquareHitBox box) {
     if(checkBasicHit(box)) {
-      Math.atan2(x - box.x, y - box.y);
+      //fill this out later like a cool kid
       return 0;
     } else {
       return -1;

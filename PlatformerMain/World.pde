@@ -5,30 +5,31 @@ class World {
   public static final int backgroundB = 184;
   public static final int blockSize = 20;
 
-  public int[][] world;
+  public Block[] world;
+
   World(String path) {
     String[] data = loadStrings(path);
     int worldLength = Integer.parseInt(data[0]);
-    world = new int[height/blockSize][worldLength];
-      for (int y = 1; y < data.length; y++) {
+    world = new Block[height/blockSize * worldLength];
+    for (int y = 1; y < data.length; y++) {
       String[] row = data[y].split(",");
-        for (int x = 0; x < row.length; x++) {
-        world[y-1][x] = Integer.parseInt(row[x]);
-      }
-    }
-  }
-  
-  public void drawIt() {
-    for(int y = 0; y < world.length; y++) {
-      for(int x = 0; x < world[y].length; x++) {
-        //basic for now improve later
-        switch(world[y][x]) {
-          case 1:
-            fill(200,200,200);
-            rect(x * blockSize,  y * blockSize, blockSize, blockSize);
+      for (int x = 0; x < row.length; x++) {
+        int type = Integer.parseInt(row[x]);
+        switch(type) {
+        case 0:
+          world[(y-1) * worldLength + x] = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          break;
+        case 1:
+          world[(y-1) * worldLength + x] = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         }
       }
+    }
+  }
+
+  public void drawIt() {
+    for(Block b : world) {
+      b.dont();
     }
   }
   //idk man

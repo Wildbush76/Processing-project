@@ -1,10 +1,9 @@
-class Block {//just your very basic dumb block
-  private static final int r = 200;
-  private static final int g = 200;
-  private static final int b = 200;
-  private int type;
-  
-  public Block(int type) {
-    this.type = type;
+abstract class Block extends SquareHitBox {//just your very basic dumb block
+  protected int[] blockColor;
+
+  public Block(int x, int y, int sizeX, int sizeY) {
+    super(x, y, sizeX, sizeY);
   }
+  public abstract void dont();
+  
 }
