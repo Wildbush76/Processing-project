@@ -7,6 +7,6 @@ class BasicBlock extends Block {
 
   public void dont() {
     fill(blockColor[0], blockColor[1], blockColor[2]);
-    rect(x, y, sizeX, sizeY);
+    rect(x, y, sizeX, sizeY,5,5,5,5);//temp round corners
   }
 }

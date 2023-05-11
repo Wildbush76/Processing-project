@@ -14,7 +14,7 @@ void keyReleased() {
 }
 
 Player mainP;
- World theWorld;
+World theWorld;
 void draw() {
   background(World.backgroundR, World.backgroundG, World.backgroundB);
   theWorld.drawIt();

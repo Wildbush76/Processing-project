@@ -1,26 +1,30 @@
 class World {
-  public static final double gravity = 0.8;///waaa waa i dont wanna do quadric formula;
+  public static final double gravity = 0.1;///waaa waa i dont wanna do quadric formula;
   public static final int backgroundR = 162;
   public static final int backgroundG = 228;
   public static final int backgroundB = 184;
   public static final int blockSize = 20;
+  
+  public final int worldHeight;
 
   public Block[] world;
 
   World(String path) {
+    worldHeight = height/blockSize;
     String[] data = loadStrings(path);
     int worldLength = Integer.parseInt(data[0]);
-    world = new Block[height/blockSize * worldLength];
-    for (int y = 1; y < data.length; y++) {
-      String[] row = data[y].split(",");
-      for (int x = 0; x < row.length; x++) {
+    world = new Block[worldHeight * worldLength];
+    
+    for (int y = 0; y < worldHeight; y++) {
+      String[] row = data[y + 1].split(",");
+      for (int x = 0; x < worldLength; x++) {
         int type = Integer.parseInt(row[x]);
         switch(type) {
         case 0:
-          world[(y-1) * worldLength + x] = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          world[y * worldLength + x] = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         case 1:
-          world[(y-1) * worldLength + x] = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          world[y * worldLength + x] = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         }
       }
