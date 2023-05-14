@@ -1,7 +1,7 @@
 //main thing
 void setup() {
-  size(700,700);
-  mainP = new Player(width/2,height/2,20,20);
+  size(700, 700);
+  mainP = new Player(width/2, height/2, 20, 20);
   theWorld = new World("world.txt");
 }
 

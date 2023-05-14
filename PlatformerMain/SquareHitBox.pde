@@ -8,16 +8,7 @@ class SquareHitBox {
     this.sizeY = sizeY;
   }
 
-  public boolean checkBasicHit(SquareHitBox box) {
-    return (x + sizeX > box.x && x < box.x + box.sizeX) && (y + sizeY > box.y && y < box.y + box.sizeY);
-  }
-
-  public byte advancedHit(SquareHitBox box) {
-    if (checkBasicHit(box)) {
-      byte angle = (byte)((Math.atan2(box.x - x, box.y - y) + PI) / PI * 5);
-      return angle;
-    } else {
-      return -1;
-    }
+  public boolean checkHit(SquareHitBox box) {
+    return (x + sizeX >= box.x && x <= box.x + box.sizeX) && (y + sizeY >= box.y && y <= box.y + box.sizeY);
   }
 }
