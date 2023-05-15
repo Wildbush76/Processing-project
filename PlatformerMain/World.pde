@@ -20,21 +20,30 @@ class World {
       String[] row = data[y + 1].split(",");
       for (int x = 0; x < worldLength; x++) {
         int type = Integer.parseInt(row[x]);
+        Block theBlock;
         switch(type) {
-        case 0:
-          world[y * worldLength + x] = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+        case 0://air
+          theBlock = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
-        case 1:
-          world[y * worldLength + x] = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+        case 1://block
+          theBlock = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          break;
+        case 2:
+        theBlock = new SpawnPoint(x * blockSize, y * blockSize, blockSize, blockSize);
+          break;
+        default:
+          theBlock =  new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         }
+        world[y * worldLength + x] = theBlock;
       }
     }
   }
 
-  public void drawIt() {
-    for (Block b : world) {
-      b.dont();
+  public void drawIt(int xOffset) {
+    translate(-xOffset, 0);
+    for (Block i : world) {
+      i.dont(xOffset);
     }
   }
   //idk man

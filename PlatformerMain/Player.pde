@@ -4,8 +4,8 @@ class Player extends SquareHitBox {
   private final int[] playerColor = {255, 0, 0};
   private boolean grounded = false;
   private final double maxMoveSpeed = 5;
-  private final double acceration = 0.5;
-  private double jumpHeight = 3;// use math to make this be in block heights
+  private final double acceration = 0.9;
+  private double jumpHeight = 3.5;// use math to make this be in block heights
 
 
   public Player(int x, int y, int xSize, int ySize) {
@@ -22,8 +22,20 @@ class Player extends SquareHitBox {
       println("you abosolute nerd");
     }
   }
-
-
+  public int getOffset() {
+    if (x > width/2 && x < theWorld.worldLength*World.blockSize - width/2) {
+      return (x - (width/2));
+    } else if (x > width/2) {
+      return theWorld.worldLength*World.blockSize - width;
+    } else {
+      return 0;
+    }
+  }
+  
+  public void setSpawnPoint(int x, int y) {
+  
+  
+    }
 
   public void run() {
     if (keys[65] && velocity[0] > -maxMoveSpeed) {
@@ -66,28 +78,6 @@ class Player extends SquareHitBox {
     }
     this.x = tempPos[0];
     this.y = tempPos[1];
-    /*
-    int tempX =
-     int maxY = ((this.y + this.sizeY)/World.blockSize > theWorld.worldHeight-1) ? 0 : 1;
-     int minY = (this.y + < World.blockSize) ? 0 : -1;
-     int maxX = ((this.x + this.sizeX)/World.blockSize > theWorld.worldLength-1) ? 0 : 1;
-     int minX = (this.x < World.blockSize) ? 0 : -1;
-     for (int y = minY; y <= maxY; y++) {
-     for (int x = minX; x <= maxX; x++) {
-     int index = ((this.x + this.sizeX/2)/World.blockSize) + x + (((this.y + this.sizeY/2)/World.blockSize) + y) * theWorld.worldLength;
-     if (theWorld.world[index].checkHit(this)) {
-     int d = (int)-Math.copySign(1, velocity[1]);
-     if (velocity[1] > 0) {
-     grounded = true;
-     }
-     velocity[1] = 0;
-     while (theWorld.world[index].checkHit(this))
-     this.y += d;
-     }
-     }
-     }
-     */
-
 
     fill(playerColor[0], playerColor[1], playerColor[2]);
     rect(x, y, sizeX, sizeY);
