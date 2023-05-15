@@ -32,7 +32,7 @@ class World {
     }
   }
 
-  public void drawIt(f) {
+  public void drawIt() {
     for (Block b : world) {
       b.dont();
     }

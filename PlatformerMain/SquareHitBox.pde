@@ -9,6 +9,9 @@ class SquareHitBox {
   }
 
   public boolean checkHit(SquareHitBox box) {
-    return (x + sizeX >= box.x && x <= box.x + box.sizeX) && (y + sizeY >= box.y && y <= box.y + box.sizeY);
+    return (x + sizeX > box.x && x < box.x + box.sizeX) && (y + sizeY > box.y && y < box.y + box.sizeY);
+  }
+  public boolean checkHit(int xPos, int yPos, int blockWidth, int blockHeight) {
+    return (x + sizeX > xPos && x < xPos + blockWidth) && (y + sizeY > yPos && y < yPos + blockHeight);
   }
 }

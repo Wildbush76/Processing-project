@@ -18,7 +18,12 @@ public class EmptyBlock extends Block {
   public boolean checkHit(SquareHitBox box) {
     return false;// you just dont hit it
   }
+  
+  public boolean checkHit(int x, int y, int sizeX, int sizeY) {
+    return false;// again, no hitting
+  }
 }
+
 
 class BasicBlock extends Block {
   protected int[] blockColor = {200, 200, 200};
