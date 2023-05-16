@@ -7,7 +7,7 @@ class World {
 
   public final int worldHeight;
   public final int worldLength;
-
+  public int[] spawnPoint = new int[2];
   public Block[] world;
 
   World(String path) {
@@ -29,7 +29,9 @@ class World {
           theBlock = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         case 2:
-        theBlock = new SpawnPoint(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock = new SpawnPoint(x * blockSize, y * blockSize, blockSize, blockSize);
+          spawnPoint[0] = x * blockSize;
+          spawnPoint[1] = y * blockSize;
           break;
         default:
           theBlock =  new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);

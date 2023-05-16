@@ -1,18 +1,18 @@
 class Player extends SquareHitBox {
-  private int health;
+  private float health;
   private double[] velocity;
   private final int[] playerColor = {255, 0, 0};
   private boolean grounded = false;
   private final double maxMoveSpeed = 5;
   private final double acceration = 0.9;
   private double jumpHeight = 3.5;// use math to make this be in block heights
+  private int[] spawnPoint = new int[2];
 
 
   public Player(int x, int y, int xSize, int ySize) {
     super(x, y, xSize, ySize);
     health = 100;
     velocity = new double[2];
-
     jumpHeight = Math.sqrt(2 * (jumpHeight + 0.5) * World.gravity * World.blockSize);
   }
 
@@ -31,12 +31,20 @@ class Player extends SquareHitBox {
       return 0;
     }
   }
-  
-  public void setSpawnPoint(int x, int y) {
-  
-  
-    }
 
+  public void setSpawnPoint(int[] pos) {
+    spawnPoint = pos;
+    die();
+  }
+  
+  private void die() {
+    health = 100;
+    x = spawnPoint[0];
+    y = spawnPoint[1];
+    velocity[1] = 0;
+    velocity[0] = 0;
+  }
+  
   public void run() {
     if (keys[65] && velocity[0] > -maxMoveSpeed) {
       velocity[0]  -= acceration;
@@ -46,7 +54,7 @@ class Player extends SquareHitBox {
       velocity[0] += (velocity[0] < 0) ? acceration : -acceration;
     }
 
-    if (keys[32] && grounded) {
+    if ((keys[32] || keys[87]) && grounded) {
       velocity[1] -= jumpHeight;
     }
 
@@ -81,5 +89,10 @@ class Player extends SquareHitBox {
 
     fill(playerColor[0], playerColor[1], playerColor[2]);
     rect(x, y, sizeX, sizeY);
+    
+    fill(255,0,0);
+    rect(x, y - 10,sizeX, 5);
+    fill(0,255,0);
+    rect(x,y - 10, sizeX *(health/100),5);
   }//run the player
 }

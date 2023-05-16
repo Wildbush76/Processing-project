@@ -50,3 +50,21 @@ class SpawnPoint extends Block {
   }
   
 }
+
+class damageBlock extends Block {
+  protected int[] blockColor = {162,240,19};
+  private boolean hit = false;
+  public damageBlock(int x, int y, int sizeX, int sizeY) {
+    super(x,y,sizeX,sizeY);
+    hitBox = true;
+  }
+  
+  public void dont(int xOffset) {
+    if(xOffset > x + sizeX && x < xOffset + width) {
+      return;
+    }
+    fill(blockColor[0], blockColor[1], blockColor[2]);
+    rect(x, y, sizeX, sizeY, 5, 5, 5, 5);//temp round corners
+    
+   }
+}
