@@ -5,6 +5,10 @@ abstract class Block extends SquareHitBox {//just your very basic dumb block
     super(x, y, sizeX, sizeY);
   }
   public abstract void dont(int xOffset);
+
+  public void onHit() {
+    //do nothing
+  }
 }
 
 public class EmptyBlock extends Block {
@@ -26,45 +30,45 @@ class BasicBlock extends Block {
   }
 
   public void dont(int xOffset) {
-    if (xOffset > x + sizeX && x < xOffset + width) {
+    if (xOffset > position[0] + sizeX && position[0] < xOffset + width) {
       return;
     }
     fill(blockColor[0], blockColor[1], blockColor[2]);
-    rect(x, y, sizeX, sizeY, 5, 5, 5, 5);//temp round corners
+    rect(position[0], position[1], sizeX, sizeY, 5, 5, 5, 5);//temp round corners
   }
 }
 
 class SpawnPoint extends Block {
-  protected int[] blockColor = {62,196,247};
+  protected int[] blockColor = {62, 196, 247};
   public SpawnPoint(int x, int y, int sizeX, int sizeY) {
     super(x, y, sizeX, sizeY);
     hitBox = false;
   }
-  
-   public void dont(int xOffset) {
-    if (xOffset > x + sizeX && x < xOffset + width) {
+
+  public void dont(int xOffset) {
+    if (xOffset > position[0] + sizeX && position[0] < xOffset + width) {
       return;
     }
     fill(blockColor[0], blockColor[1], blockColor[2]);
-    rect(x, y, sizeX, sizeY, 5, 5, 5, 5);//temp round corners
+    rect(position[0], position[1], sizeX, sizeY, 5, 5, 5, 5);//temp round corners
   }
-  
 }
 
-class damageBlock extends Block {
-  protected int[] blockColor = {162,240,19};
-  private boolean hit = false;
-  public damageBlock(int x, int y, int sizeX, int sizeY) {
-    super(x,y,sizeX,sizeY);
+class DamageBlock extends Block {
+  protected int[] blockColor = {162, 240, 19};
+  public DamageBlock(int x, int y, int sizeX, int sizeY) {
+    super(x, y, sizeX, sizeY);
     hitBox = true;
   }
-  
+
   public void dont(int xOffset) {
-    if(xOffset > x + sizeX && x < xOffset + width) {
+    if (xOffset > position[0] + sizeX && position[0] < xOffset + width) {
       return;
     }
     fill(blockColor[0], blockColor[1], blockColor[2]);
-    rect(x, y, sizeX, sizeY, 5, 5, 5, 5);//temp round corners
-    
-   }
+    rect(position[0], position[1], sizeX, sizeY, 5, 5, 5, 5);//temp round corners
+  }
+  public void onHit() {
+    mainP.takeDamageNerd(1);
+  }
 }

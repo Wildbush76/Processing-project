@@ -33,6 +33,9 @@ class World {
           spawnPoint[0] = x * blockSize;
           spawnPoint[1] = y * blockSize;
           break;
+        case 3:
+          theBlock = new DamageBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          break;
         default:
           theBlock =  new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;

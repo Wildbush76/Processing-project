@@ -4,7 +4,6 @@ void setup() {
   mainP = new Player(width/2, height/2, 20, 20);
   theWorld = new World("world.txt");
   mainP.setSpawnPoint(theWorld.spawnPoint);
-  
 }
 
 boolean[] keys = new boolean[256];

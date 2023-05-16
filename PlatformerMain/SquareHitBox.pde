@@ -1,19 +1,17 @@
 class SquareHitBox {
-  protected int x, y, sizeX, sizeY;
+  protected int[] position;
+  protected int sizeX, sizeY;
   protected boolean hitBox;
 
   SquareHitBox(int x, int y, int sizeX, int sizeY) {
-    this.x = x;
-    this.y = y;
+    position = new int[2];
+    position[0] = x;
+    position[1] = y;
     this.sizeX = sizeX;
     this.sizeY = sizeY;
     hitBox = true;
   }
-
   public boolean checkHit(SquareHitBox box) {
-    return hitBox && (x + sizeX > box.x && x < box.x + box.sizeX) && (y + sizeY > box.y && y < box.y + box.sizeY);
-  }
-  public boolean checkHit(int xPos, int yPos, int blockWidth, int blockHeight) {
-    return hitBox && (x + sizeX > xPos && x < xPos + blockWidth) && (y + sizeY > yPos && y < yPos + blockHeight);
+    return hitBox && (position[0] + sizeX > box.position[0] && position[0] < box.position[0] + box.sizeX) && (position[1] + sizeY > box.position[1] && position[1] < box.position[1] + box.sizeY);
   }
 }

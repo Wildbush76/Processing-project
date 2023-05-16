@@ -16,16 +16,16 @@ class Player extends SquareHitBox {
     jumpHeight = Math.sqrt(2 * (jumpHeight + 0.5) * World.gravity * World.blockSize);
   }
 
-  public void takeDamgeNerd(int amount) {
+  public void takeDamageNerd(int amount) {
     health -= amount;
     if (health <= 0) {
-      println("you abosolute nerd");
+      die();
     }
   }
   public int getOffset() {
-    if (x > width/2 && x < theWorld.worldLength*World.blockSize - width/2) {
-      return (x - (width/2));
-    } else if (x > width/2) {
+    if (position[0] > width/2 && position[0] < theWorld.worldLength*World.blockSize - width/2) {
+      return (position[0] - (width/2));
+    } else if (position[0] > width/2) {
       return theWorld.worldLength*World.blockSize - width;
     } else {
       return 0;
@@ -36,15 +36,14 @@ class Player extends SquareHitBox {
     spawnPoint = pos;
     die();
   }
-  
+
   private void die() {
     health = 100;
-    x = spawnPoint[0];
-    y = spawnPoint[1];
+    position = spawnPoint.clone();
     velocity[1] = 0;
     velocity[0] = 0;
   }
-  
+
   public void run() {
     if (keys[65] && velocity[0] > -maxMoveSpeed) {
       velocity[0]  -= acceration;
@@ -62,37 +61,31 @@ class Player extends SquareHitBox {
 
     grounded = false;
     velocity[1] += World.gravity;
-    int[] tempPos = {this.x, this.y};
-    this.x += velocity[0];
-    this.y += velocity[1];
-
     for (int i = 0; i < 2; i++) {
-      tempPos[i] += velocity[i];
-      for (int y = -1; y <= 1; y++) {
-        for (int x = -1; x <= 1; x++) {//alright.. so im lazy just have 2 thick margin around everything
-          int blockIndex =((this.x + this.sizeX/2)/World.blockSize) + x + (((this.y + this.sizeY/2)/World.blockSize) + y) * theWorld.worldLength;
-          if (theWorld.world[blockIndex].checkHit(tempPos[0], tempPos[1], this.sizeX, this.sizeY)) {
+      position[i] += velocity[i];
+      for (int y = -sizeY/World.blockSize; y <= sizeY/World.blockSize; y++) {
+        for (int x = -sizeX/World.blockSize; x <= sizeX/World.blockSize; x++) {//alright.. so im lazy just have 2 thick margin around everything
+          int blockIndex =((position[0] + this.sizeX/2)/World.blockSize) + x + (((position[1] + this.sizeY/2)/World.blockSize) + y) * theWorld.worldLength;
+          if (theWorld.world[blockIndex].checkHit(this)) {
+            theWorld.world[blockIndex].onHit();
             int direction = (int)-Math.copySign(1, velocity[i]);
             if (i == 1 && velocity[1] > 0) {
               grounded = true;
             }
             velocity[i] = 0;
-            while (theWorld.world[blockIndex].checkHit(tempPos[0], tempPos[1], this.sizeX, this.sizeY)) {
-              tempPos[i] += direction;
+            while (theWorld.world[blockIndex].checkHit(this)) {
+              position[i] += direction;
             }
           }
         }
       }
     }
-    this.x = tempPos[0];
-    this.y = tempPos[1];
-
     fill(playerColor[0], playerColor[1], playerColor[2]);
-    rect(x, y, sizeX, sizeY);
-    
-    fill(255,0,0);
-    rect(x, y - 10,sizeX, 5);
-    fill(0,255,0);
-    rect(x,y - 10, sizeX *(health/100),5);
+    rect(position[0], position[1], sizeX, sizeY);
+
+    fill(255, 0, 0);
+    rect(position[0], position[1] - 10, sizeX, 5);
+    fill(0, 255, 0);
+    rect(position[0], position[1] - 10, sizeX *(health/100), 5);
   }//run the player
 }
