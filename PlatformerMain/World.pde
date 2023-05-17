@@ -28,13 +28,16 @@ class World {
         case 1://block
           theBlock = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
-        case 2:
+        case 2://spawn Point
           theBlock = new SpawnPoint(x * blockSize, y * blockSize, blockSize, blockSize);
           spawnPoint[0] = x * blockSize;
           spawnPoint[1] = y * blockSize;
           break;
-        case 3:
+        case 3: // damage block
           theBlock = new DamageBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          break;
+        case 4:// grapple node
+          theBlock = new GrappleNode(x * blockSize, y * blockSize, blockSize, blockSize);
           break;
         default:
           theBlock =  new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);

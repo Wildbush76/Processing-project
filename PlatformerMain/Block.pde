@@ -72,3 +72,15 @@ class DamageBlock extends Block {
     mainP.takeDamageNerd(1);
   }
 }
+
+class GrappleNode extends Block {
+  protected int[] blockColor = {126, 126, 126};
+  public GrappleNode(int x, int y, int xSize, int ySize) {
+    super(x, y, xSize, ySize);
+    hitBox = false;
+  }
+  public void dont(int xOffset) {
+    fill(blockColor[0], blockColor[1], blockColor[2]);
+    ellipse(position[0] + World.blockSize/2, position[1] + World.blockSize/2, sizeX/2, sizeY/2);
+  }
+}
