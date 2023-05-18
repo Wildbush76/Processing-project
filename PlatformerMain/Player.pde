@@ -26,7 +26,7 @@ class Player extends SquareHitBox {
     grappleLocation = new int[2];
     grappleVelocity = 0.0;
     grappled = false;
-    maxGrappleDistance = Math.pow(100, 2);
+    maxGrappleDistance = Math.pow(500, 2);
     currentGrappleAngle = 0;
   }
 
@@ -59,8 +59,9 @@ class Player extends SquareHitBox {
   }
 
   private void startGrapple() {
+    
     int[] bestPos = {-1, -1};
-    double score = 8000;
+    double score = maxGrappleDistance + 10;
     double distance = 0;
     for (Block b : theWorld.world) {
       if (b instanceof GrappleNode) {
@@ -68,20 +69,25 @@ class Player extends SquareHitBox {
         if (distance < score && distance < maxGrappleDistance) {
           bestPos = b.position;
           score = distance;
-        }
+        }//check that player has line of sight of the grapple location
       }
     }
     if (bestPos[0] != -1 && bestPos[1] != -1) {
       grappled = true;
       grappleLocation = bestPos;//add a clone if needed
-      currentGrappleAngle =Math.atan2(bestPos[0] - position[0], bestPos[1] - position[1])
-        grappleVelocity = currentGrappleAngle - Math.atan2(bestPos[0] - (position[0] + velocity[0]), bestPos[1] - (position[1] + velocity[1]));
-      grappleDistance = distance;
+      currentGrappleAngle =Math.atan2(position[0] - bestPos[0], position[1] - bestPos[1]);
+      grappleVelocity = currentGrappleAngle - Math.atan2((position[0] + velocity[0]) - bestPos[0], (position[1] + velocity[1]) - bestPos[1]);
+      grappleDistance = Math.sqrt(distance);
     }
   }
 
   private void stopGrapple () {
     grappled = false;
+    currentGrappleAngle += grappleVelocity;
+    double tempX = (Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
+    double tempY = (Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
+    velocity[0] = tempX - position[0];
+    velocity[1] = tempY - position[1] ;
 
     //add new movement speed logic here
   }
@@ -111,12 +117,12 @@ class Player extends SquareHitBox {
   }
 
   private void swingCollisions() {
-    grappleVelocity = (-1 * World.gravity * Math.sin(currentGrappleAngle)) / grappleDistance;
+    grappleVelocity += (-1.1 * World.gravity * Math.sin(currentGrappleAngle)) / grappleDistance;
     currentGrappleAngle += grappleVelocity;
-    position[0] = Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0];
-    position[1] = Math.cos(currentGrappleAngl) * grappleDistane + grappleLocation[1];
+    position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
+    position[1] = (int)(Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
 
-    line(position[0] + World.blockSize/2, position[1] + World.blockSize/2, grappleLocation[0] + World.blockSize/2, grappleLocation[1] + World.blockSize/2);
+    line(position[0] + sizeX/2, position[1] +sizeY/2, grappleLocation[0] + World.blockSize/2, grappleLocation[1] + World.blockSize/2);
   }
 
   public void run() {
@@ -124,8 +130,12 @@ class Player extends SquareHitBox {
       velocity[0]  -= acceration;
     } else if (keys[68] && velocity[0] < maxMoveSpeed) {
       velocity[0] += acceration;
-    } else if (velocity[0] != 0) {
-      velocity[0] += (velocity[0] < 0) ? acceration : -acceration;
+    } else if (velocity[0] != 0 && grounded) {
+      //velocity[0] += (velocity[0] < 0) ? acceration : -acceration;//change this when not lazy
+      velocity[0] /= 1.5;
+      if(abs((float)velocity[0])/3.0 < 0.1) {
+        velocity[0] = 0;
+      }
     }
 
     if ((keys[32] || keys[87]) && grounded && !grappled) {
