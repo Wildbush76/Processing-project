@@ -54,5 +54,24 @@ class World {
       i.dont(xOffset);
     }
   }
+
+  public boolean checkLineOfSight(int x1, int y1, int x2, int y2) {
+    double angle = Math.atan2(x2 - x1, y2 - y1);
+    double currentX = x1;
+    double currentY = y1;
+    double dX = Math.sin(angle);
+    double dY = Math.cos(angle);
+    double distance;
+    do {
+      distance = Math.sqrt(Math.pow(currentX - x2, 2) + Math.pow(currentY - y2, 2));
+      currentX += dX;
+      currentY += dY;
+      int index = ((int)currentX / blockSize) + ((int)currentY / blockSize) * worldLength;
+      if (world[index].getHitBoxStatus()) {
+        return false;
+      }
+    } while (distance > blockSize);
+    return true;
+  }
   //idk man
 }
