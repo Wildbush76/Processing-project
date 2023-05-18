@@ -68,7 +68,7 @@ class Player extends SquareHitBox {
         if (distance < score && distance < maxGrappleDistance && theWorld.checkLineOfSight(position[0] + sizeX/2,position[1] + sizeY/2,b.position[0] + World.blockSize/2,b.position[1] + World.blockSize/2)) {
           bestPos = b.position;
           score = distance;
-        }//check that player has line of sight of the grapple location
+        }
       }
     }
     if (bestPos[0] != -1 && bestPos[1] != -1) {
@@ -87,11 +87,8 @@ class Player extends SquareHitBox {
     double tempY = (Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
     velocity[0] = tempX - position[0];
     velocity[1] = tempY - position[1];
-
-    position[0] += velocity[0];
-    position[1] += velocity[1];
-
-    //add new movement speed logic here
+    blockCollisions();
+    //add new movement speed logic here -- not really needed
   }
 
   private void blockCollisions() {
@@ -119,7 +116,7 @@ class Player extends SquareHitBox {
   }
 
   private void swingCollisions() {
-    grappleVelocity += (-1 * World.gravity * Math.sin(currentGrappleAngle)) / grappleDistance;
+    grappleVelocity += (-World.gravity * Math.sin(currentGrappleAngle)) / grappleDistance;
     currentGrappleAngle += grappleVelocity;
     position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
     position[1] = (int)(Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
@@ -132,9 +129,9 @@ class Player extends SquareHitBox {
           currentGrappleAngle -= grappleVelocity;
           position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
           position[1] = (int)(Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
+          keys[16] = false;
           stopGrapple();
           blockCollisions();
-          keys[16] = false;
           return;
         }
       }
@@ -147,7 +144,6 @@ class Player extends SquareHitBox {
     } else if (keys[68] && velocity[0] < maxMoveSpeed) {
       velocity[0] += acceration;
     } else if (velocity[0] != 0 && grounded) {
-      //velocity[0] += (velocity[0] < 0) ? acceration : -acceration;//change this when not lazy
       velocity[0] /= 1.5;
       if (abs((float)velocity[0])/3.0 < 0.1) {
         velocity[0] = 0;

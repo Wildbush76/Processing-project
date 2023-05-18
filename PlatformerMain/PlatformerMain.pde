@@ -1,4 +1,16 @@
 //main thing
+
+/*
+To do list (no specific order) * is important
+ * make good level
+ * add coin things
+ add enenimes
+ add sword
+ looking into better logic
+ add sprites
+ add sound
+ 
+ */
 void setup() {
   size(700, 700);
   mainP = new Player(width/2, height/2, 20, 20);
@@ -7,11 +19,16 @@ void setup() {
 }
 
 boolean[] keys = new boolean[256];
-void keyPressed() {
-  keys[keyCode] = true;
+boolean[] realKeys = new boolean[256];
+void keyPressed() {//hey guys time for the worst fix ever
+  if (!realKeys[keyCode]) {
+    keys[keyCode] = true;
+    realKeys[keyCode] = true;
+  }
 }
 void keyReleased() {
   keys[keyCode] = false;
+  realKeys[keyCode] = false;
 }
 
 Player mainP;
