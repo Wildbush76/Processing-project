@@ -15,11 +15,12 @@ class Player extends SquareHitBox {
   private double grappleDistance;
   private double currentGrappleAngle;
   private final double maxGrappleDistance;
-
+  private PImage sprite;
 
 
   public Player(int x, int y, int xSize, int ySize) {
     super(x, y, xSize, ySize);
+    sprite = loadImage("playerGuy.png");
     health = 100;
     velocity = new double[2];
     jumpHeight = Math.sqrt(2 * (jumpHeight + 0.5) * World.gravity * World.blockSize);
@@ -168,8 +169,9 @@ class Player extends SquareHitBox {
     }
 
 
-    fill(playerColor[0], playerColor[1], playerColor[2]);
-    rect(position[0], position[1], sizeX, sizeY);
+    //fill(playerColor[0], playerColor[1], playerColor[2]);
+    //rect(position[0], position[1], sizeX, sizeY);
+    image(sprite,position[0],position[1]);
 
     fill(255, 0, 0);
     rect(position[0], position[1] - 10, sizeX, 5);
