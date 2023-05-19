@@ -69,7 +69,7 @@ class DamageBlock extends Block {
     rect(position[0], position[1], sizeX, sizeY, 5, 5, 5, 5);//temp round corners
   }
   public void onHit() {
-    mainP.takeDamageNerd(5);
+    mainP.takeDamageNerd(50);
   }
 }
 

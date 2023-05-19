@@ -40,10 +40,12 @@ class Block {
       this.bColor[0] = 162;
       this.bColor[1] = 240;
       this.bColor[2] = 19;
+      break;
     case 4://grapple node 126, 126, 126
       this.bColor[0] = 126;
       this.bColor[1] = 126;
       this.bColor[2] = 126;
+      break;
     }
   }
 

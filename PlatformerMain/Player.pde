@@ -1,7 +1,7 @@
 class Player extends SquareHitBox {
   private float health;
   private double[] velocity;
-  private final int[] playerColor = {255, 0, 0};
+
   private boolean grounded = false;
   private final double maxMoveSpeed = 5;
   private final double acceration = 0.9;
@@ -153,6 +153,7 @@ class Player extends SquareHitBox {
 
     if ((keys[32] || keys[87]) && grounded && !grappled) {
       velocity[1] -= jumpHeight;
+      keys[32] = false;
     }
 
     if (grappled) {

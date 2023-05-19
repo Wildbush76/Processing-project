@@ -47,19 +47,19 @@ void keyReleased() {
 }
 
 void mousePressed() {
+  mouseDragged();
+}
+
+void mouseDragged() {
   if (mouseY > 50) {
-    mouseDragged();
+    int x = (mouseX + xOffset)/blockSize;
+    int y = (mouseY - 50)/blockSize;
+    world.get(y).get(x).setType(currentType);
   } else {
     if (mouseX < blockColors.length * blockSize) {
       currentType = mouseX/blockSize;
     }
   }
-}
-
-void mouseDragged() {
-  int x = (mouseX + xOffset)/blockSize;
-  int y = (mouseY - 50)/blockSize;
-  world.get(y).get(x).setType(currentType);
 }
 
 void mouseWheel(MouseEvent event) {
@@ -69,6 +69,7 @@ void mouseWheel(MouseEvent event) {
   }
 }
 
+//makes the color blocks, using RGB
 int[][] blockColors = new int[5][3];
 void draw() {
   background(255, 255, 255);
@@ -106,7 +107,7 @@ void draw() {
     int x = world.get(0).size();
     x *= blockSize;
     for (int y = 0; y < height/blockSize; y++) {
-      world.get(y).add(new Block(x , y*blockSize));
+      world.get(y).add(new Block(x, y*blockSize));
     }
   }
 
