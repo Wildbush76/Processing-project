@@ -27,7 +27,7 @@ class Player extends SquareHitBox {
     grappleLocation = new int[2];
     grappleVelocity = 0.0;
     grappled = false;
-    maxGrappleDistance = Math.pow(500, 2);
+    maxGrappleDistance = Math.pow(200, 2);
     currentGrappleAngle = 0;
   }
 
@@ -60,24 +60,30 @@ class Player extends SquareHitBox {
   }
 
   private void startGrapple() {
+    println("starting grapple");
     int[] bestPos = {-1, -1};
     double score = maxGrappleDistance + 10;
     double distance = 0;
     for (Block b : theWorld.world) {
       if (b instanceof GrappleNode) {
+        println("hey we foudn one");
+        println("x " + b.position[0] + " y " + b.position[1]);
         distance = Math.pow(b.position[0] - position[0], 2) + Math.pow(b.position[1] - position[1], 2);
         if (distance < score && distance < maxGrappleDistance && theWorld.checkLineOfSight(position[0] + sizeX/2,position[1] + sizeY/2,b.position[0] + World.blockSize/2,b.position[1] + World.blockSize/2)) {
-          bestPos = b.position;
-          score = distance;
+          bestPos = b.position;//fix this shit later, its targeting the wrong one for some fucking reason
+          score = distance;// good a fucking enough
         }
       }
     }
     if (bestPos[0] != -1 && bestPos[1] != -1) {
       grappled = true;
       grappleLocation = bestPos;//add a clone if needed
+       println("current distance " + Math.sqrt(Math.pow(position[0] - grappleLocation[0],2) + Math.pow(position[1] - grappleLocation[1],2)));
       currentGrappleAngle =Math.atan2(position[0] - bestPos[0], position[1] - bestPos[1]);
+      println("x " + bestPos[0] + " y " + bestPos[1]);
       grappleVelocity = currentGrappleAngle - Math.atan2((position[0] + velocity[0]) - bestPos[0], (position[1] + velocity[1]) - bestPos[1]);
       grappleDistance = Math.sqrt(distance);
+      println("it thinks it " + grappleDistance);
     }
   }
 
@@ -121,6 +127,7 @@ class Player extends SquareHitBox {
     currentGrappleAngle += grappleVelocity;
     position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
     position[1] = (int)(Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
+      println("after X " + position[1] + " Y " + position[1]);
     line(position[0] + sizeX/2, position[1] +sizeY/2, grappleLocation[0] + World.blockSize/2, grappleLocation[1] + World.blockSize/2);
 
     for (int y = -1; y <= sizeY/World.blockSize; y++) {
