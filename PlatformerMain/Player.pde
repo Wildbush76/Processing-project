@@ -1,10 +1,10 @@
 class Player extends SquareHitBox {
+  private final int MAXHEALTH = 100;
   private float health;
   private double[] velocity;
-
   private boolean grounded = false;
-  private final double maxMoveSpeed = 5;
-  private final double acceration = 0.9;
+  private final double MAX_MOVE_SPEED = 5;
+  private final double ACCERATION = 0.9;
   private double jumpHeight = 3.5;// use math to make this be in block heights
   private int[] spawnPoint = new int[2];
 
@@ -15,15 +15,21 @@ class Player extends SquareHitBox {
   private double grappleDistance;
   private double currentGrappleAngle;
   private final double maxGrappleDistance;
-  private PImage sprite;
+
+  //visiual things
+  private PImage spriteLeft;
+  private PImage spriteRight;
+  private boolean facingRight;
 
 
   public Player(int x, int y, int xSize, int ySize) {
     super(x, y, xSize, ySize);
-    sprite = loadImage("playerGuy.png");
-    health = 100;
+    spriteLeft = loadImage("playerGuyLeft.png");
+    spriteRight = loadImage("playerGuyRight.png");
+
+    health = MAXHEALTH;
     velocity = new double[2];
-    jumpHeight = Math.sqrt(2 * (jumpHeight + 0.5) * World.gravity * World.blockSize);
+    jumpHeight = Math.sqrt(2 * (jumpHeight + 0.5) * World.gravity * World.BLOCK_SIZE);
     grappleLocation = new int[2];
     grappleVelocity = 0.0;
     grappled = false;
@@ -38,10 +44,10 @@ class Player extends SquareHitBox {
     }
   }
   public int getOffset() {
-    if (position[0] > width/2 && position[0] < theWorld.worldLength*World.blockSize - width/2) {
+    if (position[0] > width/2 && position[0] < theWorld.worldLength*World.BLOCK_SIZE - width/2) {
       return (position[0] - (width/2));
     } else if (position[0] > width/2) {
-      return theWorld.worldLength*World.blockSize - width;
+      return theWorld.worldLength*World.BLOCK_SIZE - width;
     } else {
       return 0;
     }
@@ -52,38 +58,34 @@ class Player extends SquareHitBox {
     die();
   }
 
-  private void die() {
-    health = 100;
+  public void die() {
+    health = MAXHEALTH;
     position = spawnPoint.clone();
     velocity[1] = 0;
     velocity[0] = 0;
   }
 
   private void startGrapple() {
-    println("starting grapple");
     int[] bestPos = {-1, -1};
     double score = maxGrappleDistance + 10;
     double distance = 0;
     for (Block b : theWorld.world) {
       if (b instanceof GrappleNode) {
-        println("hey we foudn one");
-        println("x " + b.position[0] + " y " + b.position[1]);
         distance = Math.pow(b.position[0] - position[0], 2) + Math.pow(b.position[1] - position[1], 2);
-        if (distance < score && distance < maxGrappleDistance && theWorld.checkLineOfSight(position[0] + sizeX/2,position[1] + sizeY/2,b.position[0] + World.blockSize/2,b.position[1] + World.blockSize/2)) {
-          bestPos = b.position;//fix this shit later, its targeting the wrong one for some fucking reason
-          score = distance;// good a fucking enough
+        if (distance < score && distance < maxGrappleDistance && theWorld.checkLineOfSight(position[0] + sizeX/2, position[1] + sizeY/2, b.position[0] + World.BLOCK_SIZE/2, b.position[1] + World.BLOCK_SIZE/2)) {
+          bestPos = b.position;
+          score = distance;
         }
       }
     }
     if (bestPos[0] != -1 && bestPos[1] != -1) {
       grappled = true;
       grappleLocation = bestPos;//add a clone if needed
-       println("current distance " + Math.sqrt(Math.pow(position[0] - grappleLocation[0],2) + Math.pow(position[1] - grappleLocation[1],2)));
+
       currentGrappleAngle =Math.atan2(position[0] - bestPos[0], position[1] - bestPos[1]);
-      println("x " + bestPos[0] + " y " + bestPos[1]);
+
       grappleVelocity = currentGrappleAngle - Math.atan2((position[0] + velocity[0]) - bestPos[0], (position[1] + velocity[1]) - bestPos[1]);
-      grappleDistance = Math.sqrt(distance);
-      println("it thinks it " + grappleDistance);
+      grappleDistance = Math.sqrt(score);
     }
   }
 
@@ -103,9 +105,9 @@ class Player extends SquareHitBox {
     velocity[1] += World.gravity;
     for (int i = 0; i < 2; i++) {
       position[i] += velocity[i];
-      for (int y = -sizeY/World.blockSize; y <= sizeY/World.blockSize; y++) {
-        for (int x = -sizeX/World.blockSize; x <= sizeX/World.blockSize; x++) {//alright.. so im lazy just have 2 thick margin around everything
-          int blockIndex =((position[0] + this.sizeX/2)/World.blockSize) + x + (((position[1] + this.sizeY/2)/World.blockSize) + y) * theWorld.worldLength;
+      for (int y = -sizeY/World.BLOCK_SIZE; y <= sizeY/World.BLOCK_SIZE; y++) {
+        for (int x = -sizeX/World.BLOCK_SIZE; x <= sizeX/World.BLOCK_SIZE; x++) {//alright.. so im lazy just have 2 thick margin around everything
+          int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.worldLength;
           if (theWorld.world[blockIndex].checkHit(this)) {
             theWorld.world[blockIndex].onHit();
             int direction = (int)-Math.copySign(1, velocity[i]);
@@ -127,12 +129,11 @@ class Player extends SquareHitBox {
     currentGrappleAngle += grappleVelocity;
     position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
     position[1] = (int)(Math.cos(currentGrappleAngle) * grappleDistance + grappleLocation[1]);
-      println("after X " + position[1] + " Y " + position[1]);
-    line(position[0] + sizeX/2, position[1] +sizeY/2, grappleLocation[0] + World.blockSize/2, grappleLocation[1] + World.blockSize/2);
+    line(position[0] + sizeX/2, position[1] +sizeY/2, grappleLocation[0] + World.BLOCK_SIZE/2, grappleLocation[1] + World.BLOCK_SIZE/2);
 
-    for (int y = -1; y <= sizeY/World.blockSize; y++) {
-      for (int x = -1; x <= sizeX/World.blockSize; x++) {//fix this logic to be better sometime, (do it in block collisions too)
-        int blockIndex =((position[0] + this.sizeX/2)/World.blockSize) + x + (((position[1] + this.sizeY/2)/World.blockSize) + y) * theWorld.worldLength;
+    for (int y = -1; y <= sizeY/World.BLOCK_SIZE; y++) {
+      for (int x = -1; x <= sizeX/World.BLOCK_SIZE; x++) {//fix this logic to be better sometime, (do it in block collisions too)
+        int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.worldLength;
         if (theWorld.world[blockIndex].checkHit(this)) {
           currentGrappleAngle -= grappleVelocity;
           position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
@@ -147,10 +148,13 @@ class Player extends SquareHitBox {
   }
 
   public void run() {
-    if (keys[65] && velocity[0] > -maxMoveSpeed) {
-      velocity[0]  -= acceration;
-    } else if (keys[68] && velocity[0] < maxMoveSpeed) {
-      velocity[0] += acceration;
+    println(health);
+    if (keys['A'] && velocity[0] > -MAX_MOVE_SPEED) {
+      velocity[0]  -= ACCERATION;
+      facingRight = false;
+    } else if (keys['D'] && velocity[0] < MAX_MOVE_SPEED) {
+      velocity[0] += ACCERATION;
+      facingRight = true;
     } else if (velocity[0] != 0 && grounded) {
       velocity[0] /= 1.5;
       if (abs((float)velocity[0])/3.0 < 0.1) {
@@ -158,7 +162,7 @@ class Player extends SquareHitBox {
       }
     }
 
-    if ((keys[32] || keys[87]) && grounded && !grappled) {
+    if ((keys[' '] || keys['W']) && grounded && !grappled) {
       velocity[1] -= jumpHeight;
       keys[32] = false;
     }
@@ -175,11 +179,11 @@ class Player extends SquareHitBox {
         startGrapple();
       }
     }
-
-
-    //fill(playerColor[0], playerColor[1], playerColor[2]);
-    //rect(position[0], position[1], sizeX, sizeY);
-    image(sprite,position[0],position[1]);
+    if (facingRight) {
+      image(spriteRight, position[0], position[1]);
+    } else {
+      image(spriteLeft, position[0], position[1]);
+    }
 
     fill(255, 0, 0);
     rect(position[0], position[1] - 10, sizeX, 5);

@@ -1,9 +1,9 @@
 class World {
   public static final double gravity = 1;
-  public static final int backgroundR = 162;
-  public static final int backgroundG = 228;
-  public static final int backgroundB = 184;
-  public static final int blockSize = 20;
+  public static final int BACKGROUND_R = 162;
+  public static final int BACKGROUND_G = 228;
+  public static final int BACKGROUND_B = 184;
+  public static final int BLOCK_SIZE = 20;
 
   public final int worldHeight;
   public final int worldLength;
@@ -11,7 +11,7 @@ class World {
   public Block[] world;
 
   World(String path) {
-    worldHeight = height/blockSize;
+    worldHeight = height/BLOCK_SIZE;
     String[] data = loadStrings(path);
     worldLength = Integer.parseInt(data[0]);
     world = new Block[worldHeight * worldLength];
@@ -23,24 +23,27 @@ class World {
         Block theBlock;
         switch(type) {
         case 0://air
-          theBlock = new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock = new EmptyBlock(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
         case 1://block
-          theBlock = new BasicBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock = new BasicBlock(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
         case 2://spawn Point
-          theBlock = new SpawnPoint(x * blockSize, y * blockSize, blockSize, blockSize);
-          spawnPoint[0] = x * blockSize;
-          spawnPoint[1] = y * blockSize;
+          theBlock = new SpawnPoint(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+          spawnPoint[0] = x * BLOCK_SIZE;
+          spawnPoint[1] = y * BLOCK_SIZE;
           break;
         case 3: // damage block
-          theBlock = new DamageBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock = new DamageBlock(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
         case 4:// grapple node
-          theBlock = new GrappleNode(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock = new GrappleNode(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
+        case 5:
+        theBlock = new Goal(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+        break;
         default:
-          theBlock =  new EmptyBlock(x * blockSize, y * blockSize, blockSize, blockSize);
+          theBlock =  new EmptyBlock(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
         }
         world[y * worldLength + x] = theBlock;
@@ -66,11 +69,11 @@ class World {
       distance = Math.sqrt(Math.pow(currentX - x2, 2) + Math.pow(currentY - y2, 2));
       currentX += dX;
       currentY += dY;
-      int index = ((int)currentX / blockSize) + ((int)currentY / blockSize) * worldLength;
+      int index = ((int)currentX / BLOCK_SIZE) + ((int)currentY / BLOCK_SIZE) * worldLength;
       if (world[index].getHitBoxStatus()) {
         return false;
       }
-    } while (distance > blockSize);
+    } while (distance > BLOCK_SIZE);
     return true;
   }
   //idk man
