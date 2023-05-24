@@ -84,7 +84,7 @@ class GrappleNode extends Block {
       return;
     }
     fill(blockColor[0], blockColor[1], blockColor[2]);
-    ellipse(position[0] + World.blockSize/2, position[1] + World.blockSize/2, sizeX/2, sizeY/2);
+    ellipse(position[0] + World.BLOCK_SIZE/2, position[1] + World.BLOCK_SIZE/2, sizeX/2, sizeY/2);
   }
 }
 
@@ -115,7 +115,7 @@ class Goal extends Block {
       return;
      }
        fill(blockColor[0], blockColor[1], blockColor[2]);
-    ellipse(position[0] + World.blockSize/2, position[1] + World.blockSize/2, sizeX/2, sizeY/2);
+    ellipse(position[0] + World.BLOCK_SIZE/2, position[1] + World.BLOCK_SIZE/2, sizeX/2, sizeY/2);
     
     
   }

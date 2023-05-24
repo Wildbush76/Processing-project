@@ -5,20 +5,20 @@ class World {
   public static final int BACKGROUND_B = 184;
   public static final int BLOCK_SIZE = 20;
 
-  public final int worldHeight;
-  public final int worldLength;
+  public final int WORLD_HEIGHT;
+  public final int WORLD_LENGTH;
   public int[] spawnPoint = new int[2];
   public Block[] world;
 
   World(String path) {
-    worldHeight = height/BLOCK_SIZE;
+    WORLD_HEIGHT = height/BLOCK_SIZE;
     String[] data = loadStrings(path);
-    worldLength = Integer.parseInt(data[0]);
-    world = new Block[worldHeight * worldLength];
+    WORLD_LENGTH = Integer.parseInt(data[0]);
+    world = new Block[WORLD_HEIGHT * WORLD_LENGTH];
 
-    for (int y = 0; y < worldHeight; y++) {
+    for (int y = 0; y < WORLD_HEIGHT; y++) {
       String[] row = data[y + 1].split(",");
-      for (int x = 0; x < worldLength; x++) {
+      for (int x = 0; x < WORLD_LENGTH; x++) {
         int type = Integer.parseInt(row[x]);
         Block theBlock;
         switch(type) {
@@ -46,7 +46,7 @@ class World {
           theBlock =  new EmptyBlock(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           break;
         }
-        world[y * worldLength + x] = theBlock;
+        world[y * WORLD_LENGTH + x] = theBlock;
       }
     }
   }
@@ -69,7 +69,7 @@ class World {
       distance = Math.sqrt(Math.pow(currentX - x2, 2) + Math.pow(currentY - y2, 2));
       currentX += dX;
       currentY += dY;
-      int index = ((int)currentX / BLOCK_SIZE) + ((int)currentY / BLOCK_SIZE) * worldLength;
+      int index = ((int)currentX / BLOCK_SIZE) + ((int)currentY / BLOCK_SIZE) * WORLD_LENGTH;
       if (world[index].getHitBoxStatus()) {
         return false;
       }

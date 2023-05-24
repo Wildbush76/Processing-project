@@ -38,16 +38,16 @@ class Player extends SquareHitBox {
   }
 
   public void takeDamageNerd(int amount) {
-    health -= amount;
+    //health -= amount;
     if (health <= 0) {
       die();
     }
   }
   public int getOffset() {
-    if (position[0] > width/2 && position[0] < theWorld.worldLength*World.BLOCK_SIZE - width/2) {
+    if (position[0] > width/2 && position[0] < theWorld.WORLD_LENGTH*World.BLOCK_SIZE - width/2) {
       return (position[0] - (width/2));
     } else if (position[0] > width/2) {
-      return theWorld.worldLength*World.BLOCK_SIZE - width;
+      return theWorld.WORLD_LENGTH*World.BLOCK_SIZE - width;
     } else {
       return 0;
     }
@@ -107,7 +107,7 @@ class Player extends SquareHitBox {
       position[i] += velocity[i];
       for (int y = -sizeY/World.BLOCK_SIZE; y <= sizeY/World.BLOCK_SIZE; y++) {
         for (int x = -sizeX/World.BLOCK_SIZE; x <= sizeX/World.BLOCK_SIZE; x++) {//alright.. so im lazy just have 2 thick margin around everything
-          int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.worldLength;
+          int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.WORLD_LENGTH;
           if (theWorld.world[blockIndex].checkHit(this)) {
             theWorld.world[blockIndex].onHit();
             int direction = (int)-Math.copySign(1, velocity[i]);
@@ -133,7 +133,7 @@ class Player extends SquareHitBox {
 
     for (int y = -1; y <= sizeY/World.BLOCK_SIZE; y++) {
       for (int x = -1; x <= sizeX/World.BLOCK_SIZE; x++) {//fix this logic to be better sometime, (do it in block collisions too)
-        int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.worldLength;
+        int blockIndex =((position[0] + this.sizeX/2)/World.BLOCK_SIZE) + x + (((position[1] + this.sizeY/2)/World.BLOCK_SIZE) + y) * theWorld.WORLD_LENGTH;
         if (theWorld.world[blockIndex].checkHit(this)) {
           currentGrappleAngle -= grappleVelocity;
           position[0] = (int)(Math.sin(currentGrappleAngle) * grappleDistance + grappleLocation[0]);
@@ -148,7 +148,6 @@ class Player extends SquareHitBox {
   }
 
   public void run() {
-    println(health);
     if (keys['A'] && velocity[0] > -MAX_MOVE_SPEED) {
       velocity[0]  -= ACCERATION;
       facingRight = false;
@@ -165,6 +164,7 @@ class Player extends SquareHitBox {
     if ((keys[' '] || keys['W']) && grounded && !grappled) {
       velocity[1] -= jumpHeight;
       keys[32] = false;
+      keys['W'] = false;
     }
 
     if (grappled) {
